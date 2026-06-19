@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import os
 import sys
 
-# Ensure Python can find the 'src' directory
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from src.dynamics import orbital_derivatives, rk4_step
 
@@ -27,7 +26,7 @@ def simulate_orbit(initial_state, dt, num_steps):
     return trajectory
 
 if __name__ == "__main__":
-    # 1. Define Initial Conditions
+   
     # Start at x=1.0, y=0.0. Give it an initial upward velocity (vy)
     # vy = 1.0 creates a perfect circle when GM=1 and x=1
     # vy > 1.0 creates an ellipse. vy >= 1.414 (sqrt(2)) escapes the system.
@@ -36,16 +35,16 @@ if __name__ == "__main__":
     dt = 0.01        # Time step resolution
     num_steps = 10000 # Total time steps to simulate
     
-    # 2. Run the simulation
+    
     print("Simulating trajectory...")
     trajectory = simulate_orbit(initial_state, dt, num_steps)
     
-    # 3. Save the data for ML training later
+    
     os.makedirs('data/trajectories', exist_ok=True)
     np.save('data/trajectories/orbit_data.npy', trajectory)
     print("Data saved to data/trajectories/orbit_data.npy")
     
-    # 4. Visualize the result
+   
     x_coords = trajectory[:, 0]
     y_coords = trajectory[:, 1]
     
@@ -57,8 +56,8 @@ if __name__ == "__main__":
     plt.ylabel("Y Position")
     plt.grid(True, linestyle='--', alpha=0.6)
     plt.legend()
-    plt.axis("equal") # Ensures circles look like circles
+    plt.axis("equal") 
     
-    # Save the plot
+    
     plt.savefig('data/trajectories/orbit_plot.png')
     plt.show()

@@ -5,14 +5,14 @@ import torch.optim as optim
 from utils import plot_trajectory_comparison
 import os
 
-# 1. Define the Standard Neural Network Architecture
+# Define the Standard Neural Network Architecture
 class NaiveMLP(nn.Module):
     def __init__(self, input_dim=4, hidden_dim=64, output_dim=4):
         super(NaiveMLP, self).__init__()
         # A simple feedforward network with 3 hidden layers
         self.net = nn.Sequential(
             nn.Linear(input_dim, hidden_dim),
-            nn.Tanh(), # Tanh is often preferred over ReLU in continuous physical systems for smoother gradients
+            nn.Tanh(), 
             nn.Linear(hidden_dim, hidden_dim),
             nn.Tanh(),
             nn.Linear(hidden_dim, hidden_dim),
@@ -47,28 +47,28 @@ if __name__ == "__main__":
         
     X_train, Y_train, true_trajectory = load_and_prep_data(data_path)
     
-    # 2. Initialize Model, Loss function, and Optimizer
+    # Initialize Model, Loss function, and Optimizer
     model = NaiveMLP()
-    criterion = nn.MSELoss() # Mean Squared Error
+    criterion = nn.MSELoss() 
     optimizer = optim.Adam(model.parameters(), lr=0.001)
     
     epochs = 1500
     print("Training standard Neural Network...")
     
-    # 3. Training Loop
+    # Training Loop
     for epoch in range(epochs):
-        optimizer.zero_grad()       # Clear old gradients
-        predictions = model(X_train)# Make guesses for the next step
-        loss = criterion(predictions, Y_train) # Calculate how wrong they are
-        loss.backward()             # Calculate gradients (Calculus Chain Rule)
-        optimizer.step()            # Update the weights to be less wrong
+        optimizer.zero_grad()       
+        predictions = model(X_train)
+        loss = criterion(predictions, Y_train) 
+        loss.backward()             
+        optimizer.step()            
         
         if epoch % 300 == 0:
             print(f"Epoch {epoch}/{epochs} | Loss: {loss.item():.6f}")
 
     print("Training complete. Beginning Autoregressive Rollout...")
     
-    # 4. The Autoregressive Rollout (Testing Phase)
+    # The Autoregressive Rollout (Testing Phase)
     # We give the AI ONLY the very first state. It must predict all 2000 future steps itself.
     num_steps = len(true_trajectory)
     predicted_trajectory = torch.zeros((num_steps, 4))
@@ -77,7 +77,7 @@ if __name__ == "__main__":
     current_state = predicted_trajectory[0].unsqueeze(0) # Shape: [1, 4]
     
     model.eval() # Put model in evaluation mode
-    with torch.no_grad(): # Don't track gradients (saves memory)
+    with torch.no_grad(): 
         for i in range(1, num_steps):
             next_state = model(current_state)
             predicted_trajectory[i] = next_state[0]
@@ -86,7 +86,6 @@ if __name__ == "__main__":
     # Convert back to numpy for plotting
     pred_data = predicted_trajectory.numpy()
     
-    # 5. Save Data and Visualize
     os.makedirs('data/trajectories', exist_ok=True)
     np.save('data/trajectories/naive_mlp_prediction.npy', pred_data)
     

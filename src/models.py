@@ -52,14 +52,14 @@ class PhysicsInformedWorldModel(nn.Module):
         x0: The initial state at t=0 [batch, 4]
         t_eval: The time steps we want to evaluate [T]
         """
-        # Step 1: Encode initial state into latent space
+        # Encode initial state into latent space
         z0 = self.encoder(x0)
         
-        # Step 2: Use the ODE solver to roll the latent state forward in time
+        # Use the ODE solver to roll the latent state forward in time
         # CHANGED: 'rk4' to 'dopri5' (Adaptive step size for stiff equations)
         z_t = odeint(self.ode_func, z0, t_eval, method='dopri5')
         
-        # Step 3: Decode all latent states back to physical coordinates
+        # Decode all latent states back to physical coordinates
         # z_t has shape [T, batch, latent_dim]
         x_pred = self.decoder(z_t)
         

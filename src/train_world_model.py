@@ -42,21 +42,21 @@ if __name__ == "__main__":
     for epoch in range(epochs):
         optimizer.zero_grad()
         
-        # 1. Forward Pass (Integrate ODE)
+        # Forward Pass (Integrate ODE)
         x_pred = model(x0, t_train)
         
-        # 2. Data Loss
+        # Data Loss
         loss_data = criterion_data(x_pred, x_train)
         
-        # 3. Physics Loss
+        # Physics Loss
         energies = model.compute_energy(x_pred)
         loss_energy = torch.var(energies)
         
-        # 4. Total Loss & Backprop
+        # Total Loss & Backprop
         total_loss = loss_data + (lambda_energy * loss_energy)
         total_loss.backward()
         
-        # --- THE NEW FIX: Gradient Clipping ---
+        
         # This prevents the "vibrations" by stopping the weights from updating too aggressively
         torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
         
@@ -67,8 +67,7 @@ if __name__ == "__main__":
 
     print("Training complete. Performing infinite-horizon rollout (10,000 steps)...")
     
-    # --- The Ultimate Test ---
-    # We now ask the model to predict the ENTIRE 10,000 steps using only x0.
+    
     model.eval()
     with torch.no_grad():
         full_prediction = model(x0, t_data)
@@ -76,7 +75,7 @@ if __name__ == "__main__":
     pred_data = full_prediction.squeeze(1).numpy()
     true_data = x_data.numpy()
     
-    # Visualize
+    
     os.makedirs('data/trajectories', exist_ok=True)
     plot_trajectory_comparison(
         true_traj=true_data,

@@ -34,15 +34,14 @@ if __name__ == "__main__":
         
     t_data, x_data = prepare_pinn_data(data_path)
     
-    # For training, we might only want to give the PINN a fraction of the data!
-    # Let's see if it can learn the whole orbit by only seeing the first 20% of it.
+    
     train_cutoff = int(len(t_data) * 0.2)
     t_train_data = t_data[:train_cutoff]
     x_train_data = x_data[:train_cutoff]
     
     print(f"Total steps: {len(t_data)}. Training on first {train_cutoff} steps.")
 
-    # 1. Initialize the PINN and Optimizer
+    # Initialize the PINN and Optimizer
     model = OrbitalPINN(hidden_dim=64)
     optimizer = optim.Adam(model.parameters(), lr=1e-3)
     criterion_data = nn.MSELoss()
@@ -53,22 +52,18 @@ if __name__ == "__main__":
 
     print("Beginning Physics-Informed Training...")
     
-    # 2. The Multi-Objective Training Loop
+    # The Multi-Objective Training Loop
     for epoch in range(epochs):
         optimizer.zero_grad()
         
-        # --- A. Data Loss ---
-        # How well does the network match the 20% of data it is allowed to see?
+        
         pred_x_data = model(t_train_data)
         loss_data = criterion_data(pred_x_data, x_train_data)
         
-        # --- B. Physics Loss (Collocation Points) ---
-        # Generate random times between 0 and max_time
-        # We sample 2000 random points across the ENTIRE time domain
+        
         t_physics = torch.rand((2000, 1), requires_grad=True) * max_time
         loss_physics = model.physics_loss(t_physics)
         
-        # --- C. Total Loss ---
         total_loss = loss_data + (lambda_physics * loss_physics)
         
         total_loss.backward()
@@ -80,16 +75,12 @@ if __name__ == "__main__":
 
     print("Training complete. Generating continuous trajectory...")
     
-    # 3. Testing / Rollout
-    # Notice the massive difference here: We do NOT feed predictions back into the model.
-    # We simply query the network for all time 't'. It has learned the continuous mathematical function!
     model.eval()
     with torch.no_grad():
         pred_trajectory = model(t_data).numpy()
     
     true_trajectory = x_data.numpy()
     
-    # 4. Save and Visualize
     os.makedirs('data/trajectories', exist_ok=True)
     save_path = 'data/trajectories/pinn_prediction.png'
     
