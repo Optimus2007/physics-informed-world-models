@@ -7,7 +7,7 @@
 
 This repository contains the official codebase and research report for **Physics-Informed World Models (PIWM)**.
 
-The project investigates the catastrophic failures of standard deep learning models when predicting continuous dynamical systems (specifically orbital mechanics) and implements a synthesized architecture utilizing **Latent Neural Ordinary Differential Equations (ODEs)** constrained by strict thermodynamic priors to achieve stable, infinite-horizon extrapolation.
+The project investigates the catastrophic failures of standard deep learning models when predicting continuous dynamical systems (specifically orbital mechanics) and implements a synthesized architecture utilizing **Latent Neural ODEs** constrained by physical priors to achieve stable long-horizon extrapolation.
 
 📄 **Read the full research paper:** [`report.pdf`](./report.pdf)
 
@@ -22,8 +22,7 @@ However, pure neural networks lack thermodynamic priors, resulting in **compound
 **This project demonstrates:**
 1. **The Failure of Pure ML:** Standard autoregressive models fundamentally fail to conserve energy.
 2. **The Limits of PINNs:** Standard continuous-time PINNs lose phase alignment over long horizons.
-3. **The Success of PIWMs:** By compressing reality into a causal latent space and substituting discrete neural layers with an adaptive Neural ODE solver (`dopri5`), model achieved a **25x extrapolation factor** without breaking energy conservation.
-
+3. **The Success of PIWMs:** By compressing reality into a causal latent space and substituting discrete neural layers with an adaptive Neural ODE solver (dopri5), the model achieved a 25x extrapolation factor while maintaining significantly better energy conservation than baseline approaches.
 ---
 
 ## 📊 Experimental Results
@@ -43,7 +42,7 @@ The PINN enforces gravitational constraints via Automatic Differentiation. While
 See [assets](assets) for the PINN visualization.
 
 ### 4. Physics-Informed World Model (PIWM)
-The Latent Neural ODE World Model vastly outperforms the baselines. By combining adaptive ODE integration with a Hamiltonian energy-variance loss, the trajectory remains tightly mathematically bounded to the ground-truth simulation without drift or spectral amnesia.
+The Latent Neural ODE World Model demonstrates substantially improved long-horizon stability compared to the baselines. By combining adaptive ODE integration with a Hamiltonian energy-variance loss, the trajectory remains tightly mathematically bounded to the ground-truth simulation without drift or spectral amnesia.
 See [assets](assets) for the world model visualization.
 
 ---
