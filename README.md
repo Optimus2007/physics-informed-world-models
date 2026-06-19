@@ -7,7 +7,7 @@
 
 This repository contains the official codebase and research report for **Physics-Informed World Models (PIWM)**.
 
-The project investigates the catastrophic failures of standard deep learning models when predicting continuous dynamical systems (specifically orbital mechanics) and proposes a novel architecture using **Latent Neural Ordinary Differential Equations (ODEs)** constrained by strict thermodynamic priors to achieve stable, infinite-horizon extrapolation.
+The project investigates the catastrophic failures of standard deep learning models when predicting continuous dynamical systems (specifically orbital mechanics) and implements a synthesized architecture utilizing **Latent Neural Ordinary Differential Equations (ODEs)** constrained by strict thermodynamic priors to achieve stable, infinite-horizon extrapolation.
 
 📄 **Read the full research paper:** [`report.pdf`](./report.pdf)
 
@@ -22,7 +22,7 @@ However, pure neural networks lack thermodynamic priors, resulting in **compound
 **This project demonstrates:**
 1. **The Failure of Pure ML:** Standard autoregressive models fundamentally fail to conserve energy.
 2. **The Limits of PINNs:** Standard continuous-time PINNs lose phase alignment over long horizons.
-3. **The Success of PIWMs:** By compressing reality into a causal latent space and substituting discrete neural layers with an adaptive Neural ODE solver (`dopri5`), our model achieved a **25x extrapolation factor** without breaking energy conservation.
+3. **The Success of PIWMs:** By compressing reality into a causal latent space and substituting discrete neural layers with an adaptive Neural ODE solver (`dopri5`), model achieved a **25x extrapolation factor** without breaking energy conservation.
 
 ---
 
@@ -42,7 +42,7 @@ See [assets](assets) for the baseline visualization.
 The PINN enforces gravitational constraints via Automatic Differentiation. While locally constrained by physics, the continuous mapping of time to space fails to close the periodic orbit over a 10,000-step horizon due to spectral bias.
 See [assets](assets) for the PINN visualization.
 
-### 4. Proposed: Physics-Informed World Model (PIWM)
+### 4. Physics-Informed World Model (PIWM)
 The Latent Neural ODE World Model vastly outperforms the baselines. By combining adaptive ODE integration with a Hamiltonian energy-variance loss, the trajectory remains tightly mathematically bounded to the ground-truth simulation without drift or spectral amnesia.
 See [assets](assets) for the world model visualization.
 
@@ -55,10 +55,15 @@ A clean, modular architecture built for reproducibility and easy expansion into 
 ```text
 physics-informed-world-models/
 ├── assets/                 # Versioned figure assets
-│   └── naive_mlp_failure.png
+│   ├── naive_mlp_failure.png
+│   ├── orbit_plot.png
+│   ├── pinn_prediction.png
+│   └── world_model_success.png
 ├── data/                   # Data generation scripts and local artifacts
 │   ├── generate_orbit.py   # RK4 ground-truth simulator
-│   └── trajectories/       # Generated .npy/.png outputs (gitignored)
+│   └── trajectories/       # Generated .npy outputs (gitignored)
+│       ├── naive_mlp_prediction.npy
+│       └── orbit_data.npy
 ├── src/                    # Core machine learning architecture
 │   ├── dynamics.py         # True mathematical derivatives
 │   ├── models.py           # PIWM Autoencoder & Neural ODE definitions
@@ -70,6 +75,7 @@ physics-informed-world-models/
 ├── tests/                  # Unit tests for physical consistency
 │   └── test_dynamics.py
 ├── requirements.txt        # Python dependencies
+├── requirement.txt         # Alternate dependency list
 ├── README.md               # Project documentation
 └── report.pdf              # Full academic research paper
 ```
