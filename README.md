@@ -32,7 +32,7 @@ All models were trained on only the first **20% (400 steps)** of a simulated 2-b
 
 ### 1. The Ground Truth (RK4 Integrator)
 The target system is an elliptical 2-body orbit governed by Newtonian gravity, generated using a custom RK4 numerical solver.
-![](assets/orbit_plot.png)
+_Generated locally at runtime: `data/trajectories/orbit_plot.png`_
 
 ### 2. Baseline 1: Naive Autoregressive MLP
 Trained purely on data, the naive model rapidly destabilizes during extrapolation. Lacking an energy-conservation prior, the compounding errors alter the implied momentum, causing a catastrophic unphysical spiral.
@@ -40,11 +40,11 @@ Trained purely on data, the naive model rapidly destabilizes during extrapolatio
 
 ### 3. Baseline 2: Standard Physics-Informed Neural Network (PINN)
 The PINN enforces gravitational constraints via Automatic Differentiation. While locally constrained by physics, the continuous mapping of time to space fails to close the periodic orbit over a 10,000-step horizon due to spectral bias.
-![](assets/pinn_prediction.png)
+_Generated locally at runtime: `data/trajectories/pinn_prediction.png`_
 
 ### 4. Proposed: Physics-Informed World Model (PIWM)
 The Latent Neural ODE World Model vastly outperforms the baselines. By combining adaptive ODE integration with a Hamiltonian energy-variance loss, the trajectory remains tightly mathematically bounded to the ground-truth simulation without drift or spectral amnesia.
-![](assets/world_model_success.png)
+_Generated locally at runtime: `data/trajectories/world_model_success.png`_
 
 ---
 
@@ -54,9 +54,11 @@ A clean, modular architecture built for reproducibility and easy expansion into 
 
 ```text
 physics-informed-world-models/
-├── assets/                 # Visual outputs and graphs
-├── data/                   # Data generation scripts
-│   └── generate_orbit.py   # RK4 ground-truth simulator
+├── assets/                 # Versioned figure assets
+│   └── naive_mlp_failure.png
+├── data/                   # Data generation scripts and local artifacts
+│   ├── generate_orbit.py   # RK4 ground-truth simulator
+│   └── trajectories/       # Generated .npy/.png outputs (gitignored)
 ├── src/                    # Core machine learning architecture
 │   ├── dynamics.py         # True mathematical derivatives
 │   ├── models.py           # PIWM Autoencoder & Neural ODE definitions
@@ -69,7 +71,6 @@ physics-informed-world-models/
 │   └── test_dynamics.py
 ├── requirements.txt        # Python dependencies
 ├── README.md               # Project documentation
-├── LICENSE                 # MIT License
 └── report.pdf              # Full academic research paper
 ```
 
@@ -81,7 +82,7 @@ Clone the repository and install the dependencies within a virtual environment:
 Bash
 
 ```bash
-git clone [https://github.com/yourusername/physics-informed-world-models.git](https://github.com/yourusername/physics-informed-world-models.git)
+git clone https://github.com/Optimus2007/physics-informed-world-models.git
 cd physics-informed-world-models
 python3 -m venv venv
 source venv/bin/activate  # On Windows use: venv\Scripts\activate
@@ -138,6 +139,6 @@ The ability of this architecture to cleanly map raw physical states into a causa
 Future iterations of this repository will focus on embedding this PIWM as the "imagination engine" for RL agents (analogous to the Dreamer architecture). By enforcing strict thermodynamic priors during the RL latent planning phase, I aim to develop highly sample-efficient and provably safe control policies for complex physical environments.
 
 ## 📄 License
-This project is licensed under the MIT License - see the [LICENSE](https://www.google.com/search?q=LICENSE&authuser=1) file for details.
+This project uses the MIT license terms for research and educational use.
 
 *Developed by Aditya Raj.*
