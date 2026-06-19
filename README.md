@@ -75,7 +75,7 @@ physics-informed-world-models/
 ├── tests/                  # Unit tests for physical consistency
 │   └── test_dynamics.py
 ├── requirements.txt        # Python dependencies
-├── requirement.txt         # Alternate dependency list
+├── LICENSE                 # MIT License
 ├── README.md               # Project documentation
 └── report.pdf              # Full academic research paper
 ```
