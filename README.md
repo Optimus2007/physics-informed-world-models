@@ -32,19 +32,19 @@ All models were trained on only the first **20% (400 steps)** of a simulated 2-b
 
 ### 1. The Ground Truth (RK4 Integrator)
 The target system is an elliptical 2-body orbit governed by Newtonian gravity, generated using a custom RK4 numerical solver.
-_Generated locally at runtime: `data/trajectories/orbit_plot.png`_
+See [assets](assets) for the orbit plot and other generated figures.
 
 ### 2. Baseline 1: Naive Autoregressive MLP
 Trained purely on data, the naive model rapidly destabilizes during extrapolation. Lacking an energy-conservation prior, the compounding errors alter the implied momentum, causing a catastrophic unphysical spiral.
-![](assets/naive_mlp_failure.png)
+See [assets](assets) for the baseline visualization.
 
 ### 3. Baseline 2: Standard Physics-Informed Neural Network (PINN)
 The PINN enforces gravitational constraints via Automatic Differentiation. While locally constrained by physics, the continuous mapping of time to space fails to close the periodic orbit over a 10,000-step horizon due to spectral bias.
-_Generated locally at runtime: `data/trajectories/pinn_prediction.png`_
+See [assets](assets) for the PINN visualization.
 
 ### 4. Proposed: Physics-Informed World Model (PIWM)
 The Latent Neural ODE World Model vastly outperforms the baselines. By combining adaptive ODE integration with a Hamiltonian energy-variance loss, the trajectory remains tightly mathematically bounded to the ground-truth simulation without drift or spectral amnesia.
-_Generated locally at runtime: `data/trajectories/world_model_success.png`_
+See [assets](assets) for the world model visualization.
 
 ---
 
