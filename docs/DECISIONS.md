@@ -90,3 +90,9 @@ here, regardless of model class. Returns are almost identical across models beca
 Wall time per run: physics 109 s, MLP 1733 s, NODE 2480 s, legacy 2257 s, NH 8762 s (CPU, 1 thread, contended).
 Follow-up: low-data sweep (50-200 random transitions) in experiments/phase_d_lowdata.py to actually test H1.
 Note: no speed clamp in sim -> failed swings can give returns below -3000 (e.g. SAC -13176).
+
+## H1 low-data result (results/phase_d_lowdata_pendulum.json; 5 seeds, one planning episode after k random episodes)
+Solved (return > -500) at 50/100/200 random transitions: physics 5/5,5/5,5/5; physics+residual 5/5,5/5,5/5; neural_hamiltonian 5/5,5/5,5/5;
+mlp_ensemble 3/5,2/5,5/5; neural_ode 4/5,2/5,5/5; legacy 1/5,0/5,4/5. Non-monotone (100 worse than 50) for the black boxes =
+high variance with n=5 seeds, a data-coverage lottery with 1-2 episodes; do not over-read. Supports H1 qualitatively in the
+50-100 transition regime for pendulum only; no effect at >=500 transitions.
