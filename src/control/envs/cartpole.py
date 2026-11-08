@@ -33,6 +33,7 @@ def cartpole_deriv_np(s, u, M, m, l, g, b):
 class CartPole(Sim):
     name = "cartpole"
     state_dim = 4
+    angle_idx = (1,)
     default_params = dict(M=1.0, m=0.3, l=0.5, g=9.8, b=0.0, umax=10.0)
     dt = 0.05
     substeps = 4
@@ -57,6 +58,9 @@ class CartPole(Sim):
         """Hanging down (th ~ pi) with small noise, for swing-up."""
         r = lambda: torch.rand(n, generator=gen, dtype=DTYPE) * 2 - 1
         return torch.stack([0.1 * r(), math.pi + 0.1 * r(), 0.1 * r(), 0.1 * r()], -1)
+
+    def sample_start(self, n, gen=None):
+        return self.sample_init(n, gen)
 
     def sample_init_wide(self, n, gen=None):
         r = lambda: torch.rand(n, generator=gen, dtype=DTYPE) * 2 - 1

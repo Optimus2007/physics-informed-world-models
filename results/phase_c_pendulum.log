@@ -1,0 +1,111 @@
+neural_hamiltonian 8 0 267 val 9.78e-07
+neural_hamiltonian 8 2 268 val 1.25e-08
+neural_hamiltonian 8 3 268 val 2.24e-07
+neural_hamiltonian 8 1 269 val 1.90e-07
+neural_hamiltonian 8 4 269 val 2.23e-07
+neural_hamiltonian 20 1 269 val 1.46e-07
+neural_hamiltonian 20 0 269 val 2.43e-07
+neural_hamiltonian 20 3 341 val 1.57e-07
+neural_hamiltonian 20 2 343 val 1.83e-07
+neural_hamiltonian 20 4 344 val 3.53e-07
+neural_hamiltonian 100 1 366 val 8.17e-08
+neural_hamiltonian 100 0 378 val 3.44e-07
+neural_hamiltonian 100 2 381 val 9.85e-08
+/Users/adityakeshri/Documents/physics-informed-world-models/src/control/models/physics_structured.py:52: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:839.)
+  return {k: float(v.detach()) for k, v in self.get_params().items()}
+physics 8 0 16 val 4.04e-13
+neural_hamiltonian 100 3 385 val 1.15e-07
+mlp_ensemble 8 0 100 val 1.84e-06
+/Users/adityakeshri/Documents/physics-informed-world-models/src/control/models/physics_structured.py:52: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:839.)
+  return {k: float(v.detach()) for k, v in self.get_params().items()}
+physics 8 1 14 val 1.43e-07
+/Users/adityakeshri/Documents/physics-informed-world-models/src/control/models/physics_structured.py:52: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:839.)
+  return {k: float(v.detach()) for k, v in self.get_params().items()}
+physics_residual 8 0 101 val 4.19e-08
+neural_ode 8 0 139 val 7.35e-06
+mlp_ensemble 8 1 99 val 1.78e-03
+legacy_latent_ode 8 0 115 val 1.28e-04
+/Users/adityakeshri/Documents/physics-informed-world-models/src/control/models/physics_structured.py:52: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:839.)
+  return {k: float(v.detach()) for k, v in self.get_params().items()}
+physics 8 2 16 val 6.13e-10
+neural_ode 8 1 142 val 9.94e-05
+physics_residual 8 1 81 val 3.04e-04
+legacy_latent_ode 8 1 93 val 4.17e-02
+mlp_ensemble 8 2 96 val 8.84e-07
+/Users/adityakeshri/Documents/physics-informed-world-models/src/control/models/physics_structured.py:52: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:839.)
+  return {k: float(v.detach()) for k, v in self.get_params().items()}
+physics 8 3 14 val 9.10e-06
+physics_residual 8 2 96 val 4.42e-06
+neural_ode 8 2 135 val 2.75e-06
+legacy_latent_ode 8 2 92 val 7.88e-05
+mlp_ensemble 8 3 95 val 2.60e-06
+physics 8 4 12 val 1.34e-11
+physics_residual 8 3 79 val 7.63e-06
+legacy_latent_ode 8 3 78 val 2.06e-04
+neural_ode 8 3 129 val 1.04e-05
+mlp_ensemble 8 4 87 val 1.35e-06
+physics 20 0 15 val 3.76e-10
+physics_residual 8 4 86 val 3.03e-08
+neural_ode 8 4 129 val 5.59e-06
+legacy_latent_ode 8 4 86 val 1.09e-04
+mlp_ensemble 20 0 96 val 1.25e-06
+neural_hamiltonian 100 4 451 val 2.81e-07
+physics 20 1 16 val 5.96e-07
+physics_residual 20 0 98 val 7.40e-08
+neural_ode 20 0 139 val 5.26e-06
+mlp_ensemble 20 1 93 val 7.41e-07
+legacy_latent_ode 20 0 112 val 1.91e-04
+/Users/adityakeshri/Documents/physics-informed-world-models/src/control/models/physics_structured.py:52: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:839.)
+  return {k: float(v.detach()) for k, v in self.get_params().items()}
+physics 20 2 13 val 8.95e-10
+legacy_latent_ode 20 1 82 val 8.44e-05
+/Users/adityakeshri/Documents/physics-informed-world-models/src/control/models/physics_structured.py:52: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:839.)
+  return {k: float(v.detach()) for k, v in self.get_params().items()}
+physics_residual 20 1 94 val 1.25e-05
+neural_ode 20 1 129 val 4.81e-06
+physics 20 3 12 val 1.40e-05
+mlp_ensemble 20 2 83 val 1.08e-06
+physics_residual 20 2 80 val 6.39e-06
+legacy_latent_ode 20 2 82 val 1.52e-04
+neural_ode 20 2 132 val 1.97e-06
+mlp_ensemble 20 3 91 val 1.32e-06
+physics 20 4 11 val 1.27e-10
+legacy_latent_ode 20 3 86 val 8.25e-05
+physics_residual 20 3 90 val 5.63e-06
+mlp_ensemble 20 4 101 val 1.45e-06
+neural_ode 20 3 145 val 4.52e-06
+physics 100 0 11 val 2.02e-13
+physics_residual 20 4 95 val 2.11e-08
+legacy_latent_ode 20 4 89 val 1.86e-04
+neural_ode 20 4 144 val 1.09e-05
+mlp_ensemble 100 0 98 val 1.08e-06
+physics 100 1 11 val 1.95e-06
+physics_residual 100 0 85 val 5.50e-08
+neural_ode 100 0 128 val 4.61e-06
+legacy_latent_ode 100 0 103 val 9.34e-05
+mlp_ensemble 100 1 86 val 6.74e-07
+physics 100 2 15 val 3.41e-10
+physics_residual 100 1 85 val 1.08e-05
+legacy_latent_ode 100 1 80 val 1.24e-04
+neural_ode 100 1 128 val 5.10e-06
+mlp_ensemble 100 2 92 val 1.61e-06
+physics 100 3 15 val 1.05e-05
+legacy_latent_ode 100 2 73 val 3.14e-04
+physics_residual 100 2 82 val 9.07e-06
+neural_ode 100 2 127 val 8.96e-06
+physics 100 4 10 val 9.96e-10
+mlp_ensemble 100 3 88 val 7.97e-07
+legacy_latent_ode 100 3 66 val 1.36e-04
+physics_residual 100 3 74 val 5.70e-06
+neural_ode 100 3 116 val 5.89e-06
+mlp_ensemble 100 4 70 val 8.76e-07
+legacy_latent_ode 100 4 46 val 1.30e-04
+physics_residual 100 4 49 val 1.69e-08
+neural_ode 100 4 76 val 3.47e-06

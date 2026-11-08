@@ -31,9 +31,15 @@ def pendulum_deriv_np(x, u, m, l, g, b):
 class Pendulum(Sim):
     name = "pendulum"
     state_dim = 2
-    default_params = dict(m=1.0, l=1.0, g=10.0, b=0.0, umax=2.0)
+    angle_idx = (0,)
+    default_params = dict(m=1.0, l=1.0, g=10.0, b=0.0, umax=2.0, usat=1e3)
     dt = 0.05
     substeps = 4
+
+    def clip(self, u):
+        """Planner/command range is `umax`; `usat` is a hidden actuator saturation (Phase F 'motor limit')."""
+        lim = min(self.params["umax"], self.params["usat"])
+        return torch.clamp(u, -lim, lim)
 
     def deriv(self, x, u, params=None):
         p = params or self.params
@@ -54,6 +60,11 @@ class Pendulum(Sim):
         th = (torch.rand(n, generator=gen, dtype=DTYPE) * 2 - 1) * math.pi
         w = torch.rand(n, generator=gen, dtype=DTYPE) * 2 - 1
         return torch.stack([th, w], -1)
+
+    def sample_start(self, n, gen=None):
+        """Task start distribution: hanging down, small noise (the swing-up problem)."""
+        r = lambda: torch.rand(n, generator=gen, dtype=DTYPE) * 2 - 1
+        return torch.stack([math.pi + 0.2 * r(), 0.2 * r()], -1)
 
     def sample_init_wide(self, n, gen=None, wmax=8.0):
         """Wider omega range for data collection (covers high-energy states)."""

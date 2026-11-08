@@ -2,4 +2,6 @@ venv/
 __pycache__/
 *.npy
 .DS_Store
-data/trajectories/*.png
+data/trajectories/*.pngresults/models/
+__pycache__/
+*.pyc

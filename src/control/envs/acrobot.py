@@ -41,6 +41,7 @@ def acrobot_deriv_np(s, u, m1, m2, l1, l2, g, b):
 class Acrobot(Sim):
     name = "acrobot"
     state_dim = 4
+    angle_idx = (0, 1)
     default_params = dict(m1=1.0, m2=1.0, l1=1.0, l2=1.0, g=9.8, b=0.0, umax=5.0)
     dt = 0.05
     substeps = 8

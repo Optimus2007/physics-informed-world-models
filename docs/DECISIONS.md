@@ -49,3 +49,34 @@ pendulum 4, cartpole 4, acrobot 8 (control dt stays 0.05 s, zero-order-hold acti
   over 5 seeds. Same order, no material disagreement; difference is within seed spread.
 - Design: the nominal unperturbed sequence is always one candidate; post-clip perturbations are used in the update;
   no terminal cost (reward over horizon only); acrobot is implemented/tested but not planned for (time budget).
+
+## D4 World-model design (Phase C)
+- Common training: one-step MSE on increments normalised by per-dim std of (x_next - x), Adam lr 1e-3, batch 256, <=1500 steps,
+  early stopping on a validation split BY EPISODE (20%), best-val weights restored. Identical for all models (fairness).
+  No multi-step (unrolled) training loss for any model; so long-horizon quality reflects model class, not a better loss.
+- MLP ensemble: K=5 members (3x200 SiLU), Poisson(1) bootstrap weights, MSE not Gaussian NLL (simplest valid choice; the spec allows MSE);
+  planning uses the ensemble mean. Inputs: (cos,sin) for angles, standardised features.
+- Neural ODE: dx/dt = MLP(features, u/umax) * (dstd/dt), RK4, 2 substeps. Output layer not zero-init.
+- Structured physics: true analytic RHS (envs/*.py pure functions) with exp-parametrised (m,l,g,b); initialised at truth x U(0.6,1.4)
+  per seed (b initialised at 0 - never from the env). Same RK4 sub-stepping as the sim (so zero model error is attainable).
+  Residual: MLP(64,64) with 1e-3-scaled output layer + L2 penalty 1e-2 on its contribution (APHYNITY-flavoured, not APHYNITY's constrained opt).
+- Neural Hamiltonian (SymODEN-style): V(q), Minv(q)=LL^T+eps (L from MLP), g(q); data in (q,qdot) converted with the model's own mass
+  matrix. No dissipation term. One bias of V is unidentifiable by construction (a constant in V).
+  Honest differences from Zhong et al.: no known-structure shortcuts (no fixed mass matrix), no angle-embedding trick besides (cos,sin).
+- Legacy latent ODE: see D5.
+- Identifiability (pendulum): with b=0, only a=3g/2l and c=3/(m l^2) are identifiable. Verified: tests/test_models.py
+  recovers a, c to 2% and g to 2% when m,l are held fixed; individual (m,l,g) are NOT recovered (e.g. 1.66, 0.776, 7.76 vs 1,1,10).
+- Evaluation: horizon RMSE normalised by per-dim std of true trajectories, angles wrapped; median and mean over 200 held-out wide-init
+  random-action trajectories. Energy drift: TRUE energy evaluated on MODEL states, u=0, median over 50 starts.
+
+## D5 Legacy latent ODE baseline
+Existing PhysicsInformedWorldModel kept as encoder->dopri5 ODE->decoder (tanh, hidden 64, latent 4), changes: action input to ODE,
+residual decoding x + dstd*(dec(z1)-dec(z0)) + dmean, orbit energy penalty dropped. It was never Hamiltonian.
+It is expected to be weak: it was designed to fit ONE trajectory, and has 64 hidden units vs 200 for others.
+
+## Gate C result (results/phase_c_pendulum.json, 5 seeds x 3 data sizes)
+Median H=100 error (400 / 1000 / 5000 transitions): physics 1.0e-4/5.8e-4/1.1e-4; neural_hamiltonian 9.1e-4/8.2e-4/6.7e-4;
+mlp_ensemble 1.0e-2/9.5e-3/4.9e-3; neural_ode 4.3e-2/2.0e-2/2.0e-2; legacy 1.4e-1/7.2e-2/5.9e-2. Energy drift at t=200:
+Hamiltonian ~7e-5 (flat), physics 4e-6..6e-4, MLP 4e-3..1.4e-2, NODE 1e-2..4e-2. The residual hurts on clean data
+(H=25: 1.7e-3 vs 2.2e-5 at 400 transitions) because it adds capacity without benefit; reported as is.
+Caveat: the data is random-action, wide-init; the same models are used in control where state distribution differs.
