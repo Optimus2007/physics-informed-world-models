@@ -80,3 +80,13 @@ mlp_ensemble 1.0e-2/9.5e-3/4.9e-3; neural_ode 4.3e-2/2.0e-2/2.0e-2; legacy 1.4e-
 Hamiltonian ~7e-5 (flat), physics 4e-6..6e-4, MLP 4e-3..1.4e-2, NODE 1e-2..4e-2. The residual hurts on clean data
 (H=25: 1.7e-3 vs 2.2e-5 at 400 transitions) because it adds capacity without benefit; reported as is.
 Caveat: the data is random-action, wide-init; the same models are used in control where state distribution differs.
+
+## Gate D result (results/phase_d_pendulum.json; 5 seeds, 10 MBRL iterations of 200 steps after 500 random steps)
+ALL six world models (incl. legacy) solve the swing-up from the very first planning episode (returns -370..-400, 5/5 seeds,
+true-model MPPI gives about -320..-372). So with 500 random transitions the task does not discriminate models: H1 is NOT
+supported or refuted by this experiment. SAC (same env, 10k steps): median return -1897 at 0, -1050 at 4k, -383 at 8k;
+3/5 seeds solved at 10k (last-3-eval mean -373,-369,-378 vs -754,-735 for the others). MBRL is ~>10x more sample efficient than SAC
+here, regardless of model class. Returns are almost identical across models because they share start states and planner seeds.
+Wall time per run: physics 109 s, MLP 1733 s, NODE 2480 s, legacy 2257 s, NH 8762 s (CPU, 1 thread, contended).
+Follow-up: low-data sweep (50-200 random transitions) in experiments/phase_d_lowdata.py to actually test H1.
+Note: no speed clamp in sim -> failed swings can give returns below -3000 (e.g. SAC -13176).
