@@ -2,3 +2,11 @@ numpy>=1.22.0
 matplotlib>=3.5.0
 torch>=2.0.0
 torchdiffeq>=0.2.3
+# --- control extension ---
+gymnasium>=0.29
+scipy
+pyyaml
+pytest
+imageio
+rliable            # IQM + bootstrap CIs (own bootstrap fallback in eval/stats.py)
+pytorch_mppi       # cross-check only; own MPPI in src/control/planners/mppi.py
