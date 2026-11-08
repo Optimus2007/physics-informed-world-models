@@ -33,6 +33,7 @@ class Pendulum(Sim):
     state_dim = 2
     default_params = dict(m=1.0, l=1.0, g=10.0, b=0.0, umax=2.0)
     dt = 0.05
+    substeps = 4
 
     def deriv(self, x, u, params=None):
         p = params or self.params

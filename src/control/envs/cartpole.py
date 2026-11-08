@@ -35,7 +35,7 @@ class CartPole(Sim):
     state_dim = 4
     default_params = dict(M=1.0, m=0.3, l=0.5, g=9.8, b=0.0, umax=10.0)
     dt = 0.05
-    substeps = 2
+    substeps = 4
 
     def deriv(self, s, u, params=None):
         p = params or self.params

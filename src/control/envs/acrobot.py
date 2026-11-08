@@ -43,7 +43,7 @@ class Acrobot(Sim):
     state_dim = 4
     default_params = dict(m1=1.0, m2=1.0, l1=1.0, l2=1.0, g=9.8, b=0.0, umax=5.0)
     dt = 0.05
-    substeps = 2
+    substeps = 8
 
     def deriv(self, s, u, params=None):
         p = params or self.params

@@ -50,11 +50,11 @@ def test_torch_numpy_agree():
     rng = np.random.default_rng(0)
     for _ in range(20):
         s = rng.uniform(-2, 2, 2); u = rng.uniform(-2, 2)
-        d_t = Pendulum().deriv(torch.tensor(s)[None], torch.tensor([[u]]))[0].numpy()
+        d_t = Pendulum().deriv(torch.tensor(s)[None], torch.tensor([[u]], dtype=torch.float64))[0].numpy()
         np.testing.assert_allclose(d_t, pendulum_deriv_np(s, u, 1.0, 1.0, 10.0, 0.0), atol=1e-12)
         s = rng.uniform(-2, 2, 4)
         e = CartPole(b=0.1)
-        d_t = e.deriv(torch.tensor(s)[None], torch.tensor([[u]]))[0].numpy()
+        d_t = e.deriv(torch.tensor(s)[None], torch.tensor([[u]], dtype=torch.float64))[0].numpy()
         p = e.params
         np.testing.assert_allclose(d_t, cartpole_deriv_np(s, u, p["M"], p["m"], p["l"], p["g"], p["b"]), atol=1e-12)
 
@@ -62,9 +62,10 @@ def test_torch_numpy_agree():
 def test_numpy_rk4_trajectory_matches_torch():
     from src.dynamics import rk4_step  # the repo's existing NumPy RK4
     env = Pendulum()
-    s = np.array([1.0, 0.0]); xt = torch.tensor([s])
+    s = np.array([1.0, 0.0]); xt = torch.tensor(s[None])
     for _ in range(200):
-        s = rk4_step(s, 0.0, env.dt, lambda st, t: pendulum_deriv_np(st, 0.0, 1.0, 1.0, 10.0, 0.0))
+        for _ in range(env.substeps):  # same sub-stepping as the torch sim
+            s = rk4_step(s, 0.0, env.dt / env.substeps, lambda st, t: pendulum_deriv_np(st, 0.0, 1.0, 1.0, 10.0, 0.0))
         xt = env.step(xt, torch.zeros(1, 1, dtype=torch.float64))
     np.testing.assert_allclose(xt[0].numpy(), s, atol=1e-9)
 
@@ -75,7 +76,7 @@ def test_pendulum_matches_gymnasium_dynamics():
         sim = Pendulum(g=g, m=m, l=l, umax=2.0)
         for th, w, u in [(0.5, 0.0, 1.0), (-2.0, 1.0, -1.5), (3.0, -2.0, 0.3)]:
             a_gym = gym_pendulum_accel(genv, th, w, u)
-            a_sim = sim.deriv(torch.tensor([[th, w]]), torch.tensor([[u]]))[0, 1].item()
+            a_sim = sim.deriv(torch.tensor([[th, w]]), torch.tensor([[u]], dtype=torch.float64))[0, 1].item()
             assert a_gym == pytest.approx(a_sim, rel=1e-4, abs=1e-4)  # gym is float32
 
 
