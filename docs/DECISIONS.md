@@ -39,3 +39,13 @@ Gate A tolerance: max|E(t)-E(0)|/max(1,|E0|) < 1e-4 over 1000 steps (50 s), u=0,
 At 1 RK4 substep per control step (dt=0.05) drift was 1.4e-3 (pendulum) and 1.1 (acrobot, chaotic).
 Halving the step cut drift ~32x each time, i.e. pure RK4 truncation, not an EOM bug. Chosen substeps:
 pendulum 4, cartpole 4, acrobot 8 (control dt stays 0.05 s, zero-order-hold actions).
+
+## D3 Planner settings that work with the TRUE simulator (Gate B; results/gate_b_*.json)
+- Pendulum (umax=2, hanging at rest start): MPPI H=40, N=500, lambda=0.5, sigma=1.0 -> 5/5 seeds swing up and balance
+  (|theta|<0.3 over last 50 of 200 steps); ~2.6 s per 200-step episode. CEM (H=40,N=500,4 iters,50 elites) 5/5, ~10 s.
+- Cartpole (M=1, m=0.3, l=0.5, umax=10): MPPI H=50, N=1000, lambda=0.5, sigma=4.0 -> 5/5 (300 steps), but returns vary
+  widely (-363 to -811) = swing-up speed differs. 
+- Own MPPI vs pytorch_mppi (same H,N,lambda,sigma; results/crosscheck_mppi.json): mean return own -358.0 vs lib -373.4
+  over 5 seeds. Same order, no material disagreement; difference is within seed spread.
+- Design: the nominal unperturbed sequence is always one candidate; post-clip perturbations are used in the update;
+  no terminal cost (reward over horizon only); acrobot is implemented/tested but not planned for (time budget).

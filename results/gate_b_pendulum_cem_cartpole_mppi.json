@@ -1,0 +1,105 @@
+{
+ "pendulum_cem": {
+  "cfg": {
+   "H": 40,
+   "N": 500,
+   "sigma": 1.0
+  },
+  "steps": 200,
+  "trials": [
+   {
+    "seed": 0,
+    "ret": -374.07378771006785,
+    "mean_abs_angle_last50": 0.018397356111011298,
+    "max_abs_angle_last50": 0.042177776674458656,
+    "solved": true,
+    "sec": 10.449724912643433
+   },
+   {
+    "seed": 1,
+    "ret": -368.311022603282,
+    "mean_abs_angle_last50": 0.015612088422848194,
+    "max_abs_angle_last50": 0.0480368525405952,
+    "solved": true,
+    "sec": 10.394127130508423
+   },
+   {
+    "seed": 2,
+    "ret": -372.1572232882889,
+    "mean_abs_angle_last50": 0.013153926225519967,
+    "max_abs_angle_last50": 0.04582594075421831,
+    "solved": true,
+    "sec": 10.410762310028076
+   },
+   {
+    "seed": 3,
+    "ret": -368.48655724046284,
+    "mean_abs_angle_last50": 0.021119024849577183,
+    "max_abs_angle_last50": 0.04874597241848422,
+    "solved": true,
+    "sec": 10.422901153564453
+   },
+   {
+    "seed": 4,
+    "ret": -379.16459747841566,
+    "mean_abs_angle_last50": 0.017920281517247786,
+    "max_abs_angle_last50": 0.049220298473267476,
+    "solved": true,
+    "sec": 10.403443813323975
+   }
+  ]
+ },
+ "cartpole_mppi": {
+  "cfg": {
+   "H": 50,
+   "N": 1000,
+   "sigma": 4.0,
+   "extra": {
+    "lam": 0.5
+   }
+  },
+  "steps": 300,
+  "trials": [
+   {
+    "seed": 0,
+    "ret": -692.6086632017227,
+    "mean_abs_angle_last50": 0.08912811027286605,
+    "max_abs_angle_last50": 0.20003213014749122,
+    "solved": true,
+    "sec": 11.211498260498047
+   },
+   {
+    "seed": 1,
+    "ret": -363.1717653428469,
+    "mean_abs_angle_last50": 0.16179275226185916,
+    "max_abs_angle_last50": 0.2951517912990802,
+    "solved": true,
+    "sec": 11.358627080917358
+   },
+   {
+    "seed": 2,
+    "ret": -811.2537572933226,
+    "mean_abs_angle_last50": 0.07801315962356227,
+    "max_abs_angle_last50": 0.18454274961418093,
+    "solved": true,
+    "sec": 11.284432172775269
+   },
+   {
+    "seed": 3,
+    "ret": -531.56861723254,
+    "mean_abs_angle_last50": 0.09248485972623176,
+    "max_abs_angle_last50": 0.1951871268261165,
+    "solved": true,
+    "sec": 11.751195907592773
+   },
+   {
+    "seed": 4,
+    "ret": -381.45403624867333,
+    "mean_abs_angle_last50": 0.07159175647584669,
+    "max_abs_angle_last50": 0.16309039813401682,
+    "solved": true,
+    "sec": 11.251175880432129
+   }
+  ]
+ }
+}

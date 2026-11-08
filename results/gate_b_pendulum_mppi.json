@@ -1,0 +1,55 @@
+{
+ "pendulum_mppi": {
+  "cfg": {
+   "H": 40,
+   "N": 500,
+   "sigma": 1.0,
+   "extra": {
+    "lam": 0.5
+   }
+  },
+  "steps": 200,
+  "trials": [
+   {
+    "seed": 0,
+    "ret": -319.44023881152157,
+    "mean_abs_angle_last50": 0.015486439633378596,
+    "max_abs_angle_last50": 0.0656188432537288,
+    "solved": true,
+    "sec": 2.6592400074005127
+   },
+   {
+    "seed": 1,
+    "ret": -370.5330482264959,
+    "mean_abs_angle_last50": 0.01625966700874635,
+    "max_abs_angle_last50": 0.04911554753615377,
+    "solved": true,
+    "sec": 2.638253927230835
+   },
+   {
+    "seed": 2,
+    "ret": -372.2228097109377,
+    "mean_abs_angle_last50": 0.022392861450356207,
+    "max_abs_angle_last50": 0.07814207765648007,
+    "solved": true,
+    "sec": 2.6263811588287354
+   },
+   {
+    "seed": 3,
+    "ret": -368.2047787643866,
+    "mean_abs_angle_last50": 0.029233888816198244,
+    "max_abs_angle_last50": 0.06720398938073302,
+    "solved": true,
+    "sec": 2.6378743648529053
+   },
+   {
+    "seed": 4,
+    "ret": -359.76205052173276,
+    "mean_abs_angle_last50": 0.012541198706501326,
+    "max_abs_angle_last50": 0.037228385577488865,
+    "solved": true,
+    "sec": 2.6462669372558594
+   }
+  ]
+ }
+}
