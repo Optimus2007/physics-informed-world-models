@@ -96,3 +96,16 @@ Solved (return > -500) at 50/100/200 random transitions: physics 5/5,5/5,5/5; ph
 mlp_ensemble 3/5,2/5,5/5; neural_ode 4/5,2/5,5/5; legacy 1/5,0/5,4/5. Non-monotone (100 worse than 50) for the black boxes =
 high variance with n=5 seeds, a data-coverage lottery with 1-2 episodes; do not over-read. Supports H1 qualitatively in the
 50-100 transition regime for pendulum only; no effect at >=500 transitions.
+
+## Phase E result (results/phase_e_pendulum.json; 5 seeds x 7 shifts x 6 models; 50 new transitions = 5 episodes x 10 steps)
+- Prediction (H=25 median error on shifted env): adapting physics params gives ~1e-10 (exact, in sim); physics+residual 1e-4;
+  neural_hamiltonian 2e-3..1e-2; black boxes 1e-2..9e-2 (before adaptation 0.05..0.47 for all).
+- Control (median return, per-shift): after adaptation EVERY model is within a few % of the oracle (true shifted simulator MPPI) for
+  most shifts, e.g. g x1.5: oracle -434, physics -438, MLP -449, NODE -493, legacy -480. Control return is far less sensitive than
+  prediction error: MPC replans every step and corrects model errors with feedback. So H2 is strongly supported for MODEL ACCURACY
+  and only weakly (small gaps, mostly inside seed noise; see analysis CIs) for CONTROL RETURN.
+- Hard shifts (g x2.0, l x1.5, m x2.0): the oracle itself scores -540..-620 (slow swing-up within 200 steps / torque limit 2), so the
+  '-500 = solved' threshold used elsewhere is not meaningful there; compare against the oracle.
+- Unadapted: gap from oracle large for g x1.5/x2.0 (-1270..-1500). Some unadapted black boxes beat physics on g x0.5 (MLP -287 vs physics -599)
+  by luck of an easier regime; no systematic claim.
+- 'ret_adapt_known' (adapt only the truly shifted parameter) also stored for physics.
