@@ -109,3 +109,11 @@ high variance with n=5 seeds, a data-coverage lottery with 1-2 episodes; do not 
 - Unadapted: gap from oracle large for g x1.5/x2.0 (-1270..-1500). Some unadapted black boxes beat physics on g x0.5 (MLP -287 vs physics -599)
   by luck of an easier regime; no systematic claim.
 - 'ret_adapt_known' (adapt only the truly shifted parameter) also stored for physics.
+
+## Phase F result (results/phase_f_pendulum.json; real pendulum b=0.15, hidden actuator saturation 1.5 < command range 2; 5 seeds, 10 MBRL iters)
+H=25 prediction error on the real env (mean [95% CI], results/summary_table.md): physics_nofric 0.279 [0.276,0.281]; neural_hamiltonian 0.265;
+physics_nofric_residual 0.0062 [0.0041,0.0085]; mlp_ensemble 0.0071; neural_ode 0.0086; physics with learnable b 0.081 [0.033,0.129] (friction learned, saturation not).
+Return (last 3 episodes): oracle -640, physics -631, nofric_residual -639, nofric -673 [-724,-625], NH -638, MLP -638, NODE -644.
+=> H4 supported for PREDICTION (residual is ~45x better than the no-friction physics model) but the residual only reaches MLP-level accuracy, it does not beat black boxes;
+for CONTROL the MPC feedback hides most of the model error (only no-friction physics is slightly, not significantly, worse: CI overlaps).
+Scope not done: cartpole/acrobot learned-model experiments (simulators + true-model planning gate only), because of the time budget.

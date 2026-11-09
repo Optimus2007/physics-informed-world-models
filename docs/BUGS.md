@@ -18,3 +18,13 @@ Test built the action as float32 `torch.tensor([[u]])` against float64 state (pr
 Test used 1 NumPy RK4 step per control step vs 4 substeps in the sim. Test error, not sim error; test now substeps identically.
 Process note: my first commit of Phase A happened with 3 failing tests because a BSD `sed` edit silently failed;
 fixed in the next commit. Lesson: run the tests before committing.
+
+## B4 (Phase C/F design) friction parameter initialised from the env's true value
+Found in code review before the Phase E/F runs: PhysicsStructured defaults init to env.params, so b would start at the true friction in
+Phase F (leak). Fix: experiments/phase_c.make sets b init = 0 always. Phase C/D runs were unaffected (b=0 there).
+## B5 (Phase A-test) IQM test passed vacuously twice
+Outliers were symmetric (cancelled in the mean) and then my replace-string did not match. Lesson: a test that cannot fail is not a test; check it fails on a broken implementation.
+## B6 (analysis) misleading 'g estimate' rows
+Table rows compared estimated g with the true shifted g although the model's learned m,l are on the non-identifiable manifold (e.g. l=0.78), so g is expected to differ.
+Removed; the valid metrics are the identifiable combinations a=3g/2l, c=3/(m l^2) (rel. error ~1e-10).
+## B7 (Phase C) hanging pytest: n/a. Note: Python `sleep`-polling is blocked in this environment; background until-loops used.

@@ -147,3 +147,23 @@ Future iterations of this repository will focus on embedding this PIWM as the "i
 This project uses the MIT license terms for research and educational use.
 
 *Developed by Aditya Raj.*
+
+
+---
+## Control extension (branch `control-extension`)
+
+A new, separate project in `src/control/`: **do physics-structured world models help model-based *control* (sample efficiency, changed physics)?**
+This is a different task from the orbit experiments above (the original model has no control input and is not Hamiltonian; its orbit results
+do not transfer). Everything below is reproduced from `results/` by `python -m analysis.make_figures`.
+
+Headline (pendulum swing-up, 5 seeds, simulation only; details, caveats and negative results in `docs/LEARNING_REPORT.md`):
+- With 500 random transitions *every* model, including the legacy one, swings up the pendulum: sample efficiency does not separate them there.
+  With only 50 transitions, physics / physics+residual / neural-Hamiltonian solved 5/5 seeds, MLP ensemble 3/5, neural ODE 4/5, legacy 1/5.
+- Long-horizon prediction (H=100) error: physics 1e-4, neural Hamiltonian 7e-4, MLP ensemble 5e-3, neural ODE 2e-2 (median over 5 seeds).
+- After gravity/length/mass shifts, 50 new transitions bring *all* models close to an oracle planner's return; the physics model's prediction error
+  becomes ~1e-10 vs 1e-2..1e-1 for black boxes.
+- Unmodelled friction + motor limit: the physics model's error jumps to 0.28, a learned residual restores 6e-3 (MLP level), control return barely changes.
+
+Not done: cartpole/acrobot learned-model experiments (simulators and true-model MPPI only).
+Run: `make test`, `python -m experiments.run_all [--fast]` (fast mode not timed), `python -m analysis.make_figures`, `python -m demo.make_gif`.
+Attribution: Gymnasium Pendulum-v1 (cross-check), pytorch_mppi (cross-check), CleanRL SAC structure (MIT), SymODEN (Zhong et al., ICLR 2020, re-implemented, not copied).
