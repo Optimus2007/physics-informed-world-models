@@ -1,4 +1,4 @@
-"""One-command reproduction. `--fast` = reduced seeds/iterations (NOT yet timed end-to-end; see docs/LEARNING_REPORT.md).
+"""One-command reproduction. `--fast` = reduced seeds/iterations (NOT yet timed end-to-end; see report_control.pdf).
 Wall-clock of the full run was NOT recorded; phase_d alone is ~83k CPU-seconds (see results/phase_d_pendulum.json)."""
 import subprocess, sys
 fast = "--fast" in sys.argv

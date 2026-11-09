@@ -8,7 +8,7 @@ gravity, length or mass change at test time by re-estimating a few parameters fr
 SymODEN-style neural Hamiltonian with control, and the repo's earlier latent-ODE adapted to take actions. SAC as a model-free reference.
 5 seeds per configuration; 95% bootstrap CIs. Simulation only, noise-free, state-based.
 
-**Key results** (all in `results/`; details and caveats in `docs/LEARNING_REPORT.md`)
+**Key results** (all in `results/`; details and caveats in `report_control.pdf`)
 1. *Prediction and energy:* median error after 100 steps (5000 training transitions): physics 1.1e-4, neural Hamiltonian 6.7e-4, MLP ensemble 4.9e-3, neural ODE 2.0e-2.
    The Hamiltonian's energy drift stays flat (~7e-5 over 200 steps) vs 4e-3 (MLP) and 3e-2 (neural ODE). (`phase_c_pendulum.json`)
 2. *Adaptation:* after a gravity/length/mass shift, 50 new transitions bring every model close to an oracle planner's return (e.g. g x1.5: unadapted about -1260, adapted

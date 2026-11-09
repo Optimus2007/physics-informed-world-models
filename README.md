@@ -5,11 +5,17 @@
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 ![Status](https://img.shields.io/badge/Status-Research_Complete-success.svg)
 
-This repository contains the official codebase and research report for **Physics-Informed World Models (PIWM)**.
+This repository has two parts.
+
+* **Part I, orbit prediction.** Physics informed world models for a two body orbit (report: [`report.pdf`](./report.pdf)).
+* **Part II, control extension.** The same question asked for control: do physics structured world models help a model based agent learn a pendulum swing up with less data, and keep working when gravity, length or mass change? (report: [`report_control.pdf`](./report_control.pdf), code in `src/control/`).
+
+Part I is the original work described next.
 
 The project investigates the catastrophic failures of standard deep learning models when predicting continuous dynamical systems (specifically orbital mechanics) and implements a synthesized architecture utilizing **Latent Neural ODEs** constrained by physical priors to achieve stable long-horizon extrapolation.
 
-📄 **Read the full research paper:** [`report.pdf`](./report.pdf)
+📄 **Part I paper:** [`report.pdf`](./report.pdf)  
+📄 **Part II paper (control extension):** [`report_control.pdf`](./report_control.pdf)
 
 ---
 
@@ -71,12 +77,27 @@ physics-informed-world-models/
 │   ├── train_pinn.py       # PINN multi-objective training loop
 │   ├── train_world_model.py# PIWM training loop (Gradient Clipping, Dopri5)
 │   └── utils.py            # Evaluation and visualization tools
-├── tests/                  # Unit tests for physical consistency
-│   └── test_dynamics.py
+├── src/control/            # PART II: control extension
+│   ├── envs/               # pendulum, cartpole, acrobot (batched RK4) + Gymnasium bridge
+│   ├── models/             # MLP ensemble, neural ODE, structured physics, residual, neural Hamiltonian, legacy latent ODE
+│   ├── planners/           # batched MPPI and CEM
+│   ├── agents/             # model based control loop, SAC baseline
+│   ├── adapt/              # system identification from a few transitions
+│   └── eval/               # data, trainer, rollout metrics, bootstrap statistics
+├── experiments/            # Part II run scripts (phase_c to phase_f, gate_b, run_all)
+├── analysis/               # figure and LaTeX table generation from results/
+├── results/                # raw result files (JSON) and summary_table.md
+├── figures/                # Part II figures and demo GIF
+├── demo/                   # GIF generation
+├── docs/                   # design decisions, bug log, summary, report LaTeX source
+├── tests/                  # Unit tests (orbit physics and control extension)
+│   ├── test_dynamics.py
+│   └── test_envs.py, test_planners.py, test_models.py, test_stats_seed_adapt.py
 ├── requirements.txt        # Python dependencies
 ├── LICENSE                 # MIT License
 ├── README.md               # Project documentation
-└── report.pdf              # Full academic research paper
+├── report.pdf              # Part I research paper (orbit)
+└── report_control.pdf      # Part II report (control extension)
 ```
 
 ## 🚀 Getting Started
@@ -138,32 +159,42 @@ Bash
 python -m unittest tests/test_dynamics.py
 ```
 
-## 🔮 Future Work: Model-Based Reinforcement Learning (MBRL)
-The ability of this architecture to cleanly map raw physical states into a causal, physics-bound latent representation establishes a robust foundation for Reinforcement Learning.
+## 🎛️ Part II: Control Extension
 
-Future iterations of this repository will focus on embedding this PIWM as the "imagination engine" for RL agents (analogous to the Dreamer architecture). By enforcing strict thermodynamic priors during the RL latent planning phase, I aim to develop highly sample-efficient and provably safe control policies for complex physical environments.
+Part I predicts. Part II asks whether physics structure also helps an agent that has to act. The orbit model had no control input and its physics entered only as a soft energy penalty, so it was never Hamiltonian and its results do not carry over to control. Part II therefore builds new action conditioned models and keeps the old one only as a baseline called `legacy_latent_ode`. The full write up, with every figure and reference, is [`report_control.pdf`](./report_control.pdf).
+
+**Setup.** Pendulum swing up in a batched RK4 simulator (cross checked against Gymnasium Pendulum v1), MPPI planning inside the learned model, SAC as a model free reference, five seeds, simulation only, noise free.
+
+**Findings (all numbers are in `results/`)**
+* With 500 random transitions every model, even the legacy one, solves the swing up, so sample efficiency does not separate them there. With only 50 transitions, physics, physics plus residual and a neural Hamiltonian solved 5 of 5 seeds, the MLP ensemble 3, the neural ODE 4 and the legacy model 1. This is suggestive, not conclusive.
+* Prediction after 100 steps (median error): physics 1.1e-4, neural Hamiltonian 6.7e-4, MLP ensemble 4.9e-3, neural ODE 2.0e-2. The Hamiltonian's energy drift stays flat.
+* After a gravity, length or mass shift, 50 new transitions bring every model close to an oracle planner's return. The physics model's prediction error falls to about 1e-10, and no black box matched that even with 1000 transitions.
+* With unmodelled friction and a hidden motor limit the physics model's error is 0.28. A learned residual brings it to 0.006, which equals a plain MLP, and control return barely changes.
+
+![Prediction error and energy drift](figures/fig3_horizon_energy.png)
+![Return under shifted physics](figures/fig4_shift_returns.png)
+![Adaptation transitions needed](figures/fig5_transitions_needed.png)
+
+**Limits.** Learning experiments use the pendulum only (cart pole and acrobot simulators exist and are tested, with no learned models on them). The structured model has exactly the right equations, which is the best case for physics. Only the combinations 3g/2l and 3/(ml^2) are identifiable, not mass, length and gravity separately. A demo animation is at [`figures/demo_shifted_gravity.gif`](figures/demo_shifted_gravity.gif).
+
+**Reproduce Part II**
+```bash
+make test            # orbit test plus 38 control tests
+make report_figs     # figures and results/summary_table.md from results/
+make report          # tables and the report PDF (needs tectonic)
+make phase_c phase_d phase_d_lowdata phase_e phase_f   # recompute the raw results (hours on a laptop CPU)
+make demo
+```
+The Phase D models are saved to `results/models/` (not tracked) and Phase E needs them, so run `make phase_d` before `make phase_e`.
+
+**Credits and licences.** Gymnasium (Pendulum v1, cross check), `pytorch_mppi` (planner cross check), the structure of CleanRL's SAC (MIT), and the Symplectic ODE Net paper (Zhong et al., ICLR 2020), which I re implemented in my own style and did not copy. Full references are in the report.
+
+## 🔮 Future Work
+* Run the same pipeline on the cart pole and acrobot, with observation noise.
+* Train the black boxes with multi step losses and test uncertainty driven choice of which transitions to collect.
+* The original Dreamer style idea (a latent imagination engine with physical priors) is still open. Part II used state space models, not a learned latent space.
 
 ## 📄 License
 This project uses the MIT license terms for research and educational use.
 
 *Developed by Aditya Raj.*
-
-
----
-## Control extension (branch `control-extension`)
-
-A new, separate project in `src/control/`: **do physics-structured world models help model-based *control* (sample efficiency, changed physics)?**
-This is a different task from the orbit experiments above (the original model has no control input and is not Hamiltonian; its orbit results
-do not transfer). Everything below is reproduced from `results/` by `python -m analysis.make_figures`.
-
-Headline (pendulum swing-up, 5 seeds, simulation only; details, caveats and negative results in `docs/LEARNING_REPORT.md`):
-- With 500 random transitions *every* model, including the legacy one, swings up the pendulum: sample efficiency does not separate them there.
-  With only 50 transitions, physics / physics+residual / neural-Hamiltonian solved 5/5 seeds, MLP ensemble 3/5, neural ODE 4/5, legacy 1/5.
-- Long-horizon prediction (H=100) error: physics 1e-4, neural Hamiltonian 7e-4, MLP ensemble 5e-3, neural ODE 2e-2 (median over 5 seeds).
-- After gravity/length/mass shifts, 50 new transitions bring *all* models close to an oracle planner's return; the physics model's prediction error
-  becomes ~1e-10 vs 1e-2..1e-1 for black boxes.
-- Unmodelled friction + motor limit: the physics model's error jumps to 0.28, a learned residual restores 6e-3 (MLP level), control return barely changes.
-
-Not done: cartpole/acrobot learned-model experiments (simulators and true-model MPPI only).
-Run: `make test`, `python -m experiments.run_all [--fast]` (fast mode not timed), `python -m analysis.make_figures`, `python -m demo.make_gif`.
-Attribution: Gymnasium Pendulum-v1 (cross-check), pytorch_mppi (cross-check), CleanRL SAC structure (MIT), SymODEN (Zhong et al., ICLR 2020, re-implemented, not copied).

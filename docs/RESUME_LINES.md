@@ -9,4 +9,4 @@
 Control extension of physics-informed world models: pendulum swing-up with MPPI in learned models.
 Compares structured physics, neural-Hamiltonian (SymODEN-style), MLP-ensemble, neural-ODE and legacy latent-ODE models plus SAC.
 Tests data efficiency, adaptation to changed gravity/length/mass from 50 transitions, and failure under unmodelled friction.
-Simulation-only, 5 seeds; includes negative results; see docs/LEARNING_REPORT.md.
+Simulation-only, 5 seeds; includes negative results; see report_control.pdf.

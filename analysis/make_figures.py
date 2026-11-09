@@ -26,8 +26,8 @@ def fig_learning_curves():
         for a in ax:
             a.plot(st, Y.mean(0), color=C[m], label=LBL[m], lw=2 if m == "sac" else 1.5, ls="--" if m != "sac" else "-")
             a.fill_between(st, ci[:, 0], ci[:, 1], color=C[m], alpha=0.15)
-    ax[0].set_xlim(0, 10000); ax[0].set_title("All methods (SAC needs ~10x more steps)")
-    ax[1].set_xlim(400, 2200); ax[1].set_ylim(-700, -250); ax[1].set_title("Zoom: model-based agents")
+    ax[0].set_xlim(0, 10000); ax[0].set_title("All methods (SAC needs about 10 times more steps)")
+    ax[1].set_xlim(400, 2200); ax[1].set_ylim(-700, -250); ax[1].set_title("Zoom on the model based agents")
     for a in ax: a.set_xlabel("environment steps"); a.set_ylabel("episode return (200 steps)")
     ax[0].legend(fontsize=7); save("fig1_learning_curves")
     for m, rs in G.items():
@@ -63,7 +63,7 @@ def fig_c():
         ax[1].semilogy([int(t) for t in ts], [np.median([r["energy"][t] for r in G[(m, 100)]]) for t in ts], "o-", color=C[m])
     ax[0].set_xlabel("rollout horizon (steps of 0.05 s)"); ax[0].set_ylabel("normalised RMSE (median over seeds)"); ax[0].legend(fontsize=7)
     ax[0].set_title("Prediction error vs horizon (5000 transitions)")
-    ax[1].set_xlabel("time (steps), u=0"); ax[1].set_ylabel("|E(x_t)-E(x_0)|/(|E_0|+1)"); ax[1].set_title("Energy drift of model rollouts")
+    ax[1].set_xlabel("time (steps), u=0"); ax[1].set_ylabel(r"$|E(x_t)-E(x_0)|\,/\,(|E_0|+1)$"); ax[1].set_title("Energy drift of model rollouts")
     save("fig3_horizon_energy")
     for m in ms:
         for sz in (8, 100):

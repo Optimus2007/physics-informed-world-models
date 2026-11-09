@@ -1,0 +1,70 @@
+\newcommand{\tabCa}{%
+Model & $H=1$ & $H=25$ & $H=100$ & Energy drift, $t=200$ \\ \midrule
+Physics & $2.5\times 10^{-6}$ & $2.5\times 10^{-5}$ & $1.1\times 10^{-4}$ & $5.2\times 10^{-6}$ \\
+Neural Hamiltonian & $2.9\times 10^{-5}$ & $1.7\times 10^{-4}$ & $6.7\times 10^{-4}$ & $7.5\times 10^{-5}$ \\
+MLP ensemble & $4.3\times 10^{-5}$ & $7.2\times 10^{-4}$ & $4.9\times 10^{-3}$ & $4.1\times 10^{-3}$ \\
+Physics + residual & $1.3\times 10^{-4}$ & $1.5\times 10^{-3}$ & $7.0\times 10^{-3}$ & $3.0\times 10^{-3}$ \\
+Neural ODE & $1.3\times 10^{-4}$ & $2.4\times 10^{-3}$ & $2.0\times 10^{-2}$ & $3.3\times 10^{-2}$ \\
+Legacy latent ODE & $5.2\times 10^{-4}$ & $8.4\times 10^{-3}$ & $5.9\times 10^{-2}$ & $5.9\times 10^{-2}$ \\%
+}
+\newcommand{\tabCb}{%
+Model & 400 transitions & 1000 transitions & 5000 transitions \\ \midrule
+Physics & $1.0\times 10^{-4}$ & $5.8\times 10^{-4}$ & $1.1\times 10^{-4}$ \\
+Neural Hamiltonian & $9.1\times 10^{-4}$ & $8.2\times 10^{-4}$ & $6.7\times 10^{-4}$ \\
+MLP ensemble & $1.0\times 10^{-2}$ & $9.5\times 10^{-3}$ & $4.9\times 10^{-3}$ \\
+Physics + residual & $8.6\times 10^{-3}$ & $9.3\times 10^{-3}$ & $7.0\times 10^{-3}$ \\
+Neural ODE & $4.3\times 10^{-2}$ & $2.0\times 10^{-2}$ & $2.0\times 10^{-2}$ \\
+Legacy latent ODE & $1.4\times 10^{-1}$ & $7.2\times 10^{-2}$ & $5.9\times 10^{-2}$ \\%
+}
+\newcommand{\tabD}{%
+Method & Return, last three episodes (mean and 95\% CI) & Seeds solved \\ \midrule
+Physics & $-382$ $[-390,\ -375]$ & 5 of 5 \\
+Physics + residual & $-382$ $[-390,\ -375]$ & 5 of 5 \\
+Neural Hamiltonian & $-382$ $[-389,\ -375]$ & 5 of 5 \\
+MLP ensemble & $-382$ $[-390,\ -376]$ & 5 of 5 \\
+Neural ODE & $-382$ $[-388,\ -375]$ & 5 of 5 \\
+Legacy latent ODE & $-381$ $[-388,\ -375]$ & 5 of 5 \\
+SAC & $-522$ $[-673,\ -373]$ & 3 of 5 \\%
+}
+\newcommand{\tabL}{%
+Model & 50 transitions & 100 transitions & 200 transitions \\ \midrule
+Physics & 5 of 5 ($\bar R=-382$) & 5 of 5 ($\bar R=-382$) & 5 of 5 ($\bar R=-381$) \\
+Physics + residual & 5 of 5 ($\bar R=-384$) & 5 of 5 ($\bar R=-360$) & 5 of 5 ($\bar R=-382$) \\
+Neural Hamiltonian & 5 of 5 ($\bar R=-361$) & 5 of 5 ($\bar R=-381$) & 5 of 5 ($\bar R=-381$) \\
+MLP ensemble & 3 of 5 ($\bar R=-675$) & 2 of 5 ($\bar R=-759$) & 5 of 5 ($\bar R=-381$) \\
+Neural ODE & 4 of 5 ($\bar R=-449$) & 2 of 5 ($\bar R=-703$) & 5 of 5 ($\bar R=-360$) \\
+Legacy latent ODE & 1 of 5 ($\bar R=-995$) & 0 of 5 ($\bar R=-1405$) & 4 of 5 ($\bar R=-406$) \\%
+}
+\newcommand{\tabEa}{%
+Shift & Oracle & Unadapted (physics) & Physics & Physics + residual & Neural Hamiltonian & MLP ensemble & Neural ODE & Legacy latent ODE \\ \midrule
+$g \times 0.5$ & $-227$ & $-517$ & $-206$ & $-206$ & $-206$ & $-236$ & $-229$ & $-244$ \\
+$g \times 1.5$ & $-449$ & $-1260$ & $-443$ & $-443$ & $-453$ & $-456$ & $-490$ & $-477$ \\
+$g \times 2.0$ & $-556$ & $-1507$ & $-568$ & $-567$ & $-607$ & $-682$ & $-681$ & $-1036$ \\
+$l \times 0.7$ & $-252$ & $-257$ & $-245$ & $-245$ & $-246$ & $-249$ & $-248$ & $-245$ \\
+$l \times 1.5$ & $-578$ & $-1049$ & $-585$ & $-585$ & $-587$ & $-584$ & $-580$ & $-591$ \\
+$m \times 0.5$ & $-208$ & $-237$ & $-210$ & $-211$ & $-213$ & $-217$ & $-217$ & $-221$ \\
+$m \times 2.0$ & $-630$ & $-861$ & $-639$ & $-639$ & $-652$ & $-663$ & $-652$ & $-692$ \\%
+}
+\newcommand{\tabEb}{%
+Model & 25 & 50 & 100 & 200 & 500 & 1000 \\ \midrule
+Physics & $1.9\times 10^{-10}$ & $1.7\times 10^{-10}$ & $1.2\times 10^{-10}$ & $1.7\times 10^{-10}$ & $1.6\times 10^{-10}$ & $1.7\times 10^{-10}$ \\
+Neural Hamiltonian & $5.5\times 10^{-2}$ & $3.7\times 10^{-3}$ & $5.1\times 10^{-4}$ & $3.5\times 10^{-4}$ & $3.4\times 10^{-4}$ & $3.2\times 10^{-4}$ \\
+MLP ensemble & $1.6\times 10^{-1}$ & $3.9\times 10^{-2}$ & $3.8\times 10^{-3}$ & $2.9\times 10^{-3}$ & $1.8\times 10^{-3}$ & $1.8\times 10^{-3}$ \\
+Neural ODE & $1.7\times 10^{-1}$ & $5.2\times 10^{-2}$ & $7.9\times 10^{-3}$ & $4.8\times 10^{-3}$ & $2.9\times 10^{-3}$ & $2.8\times 10^{-3}$ \\
+Legacy latent ODE & $3.0\times 10^{-1}$ & $6.4\times 10^{-2}$ & $2.7\times 10^{-2}$ & $1.8\times 10^{-2}$ & $1.3\times 10^{-2}$ & $1.3\times 10^{-2}$ \\%
+}
+\newcommand{\recovAmed}{$1.9\times 10^{-10}$}
+\newcommand{\recovAmax}{$5.5\times 10^{-10}$}
+\newcommand{\recovCmed}{$4.6\times 10^{-10}$}
+\newcommand{\recovCmax}{$2.2\times 10^{-9}$}
+\newcommand{\recovN}{35}
+\newcommand{\tabF}{%
+Model & Return, last three episodes & Prediction error at $H=25$ \\ \midrule
+Oracle (true simulator) & $-640$ $[-651,\ -629]$ & not applicable \\
+Physics, no friction term & $-673$ $[-724,\ -625]$ & $2.8\times 10^{-1}$ $[2.8\times 10^{-1},\ 2.8\times 10^{-1}]$ \\
+Physics, no friction term + residual & $-639$ $[-650,\ -629]$ & $6.2\times 10^{-3}$ $[4.1\times 10^{-3},\ 8.5\times 10^{-3}]$ \\
+Physics & $-631$ $[-643,\ -623]$ & $8.1\times 10^{-2}$ $[3.2\times 10^{-2},\ 1.3\times 10^{-1}]$ \\
+Neural Hamiltonian & $-638$ $[-656,\ -619]$ & $2.7\times 10^{-1}$ $[2.6\times 10^{-1},\ 2.8\times 10^{-1}]$ \\
+MLP ensemble & $-638$ $[-646,\ -630]$ & $7.1\times 10^{-3}$ $[6.3\times 10^{-3},\ 7.9\times 10^{-3}]$ \\
+Neural ODE & $-644$ $[-654,\ -633]$ & $8.6\times 10^{-3}$ $[7.1\times 10^{-3},\ 1.0\times 10^{-2}]$ \\%
+}
