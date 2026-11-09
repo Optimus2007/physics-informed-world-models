@@ -1,5 +1,5 @@
 """One-command reproduction. `--fast` = reduced seeds/iterations (NOT yet timed end-to-end; see docs/LEARNING_REPORT.md).
-Full run on an 8-core laptop took roughly: phase_c ~30 min, phase_d ~4 h (neural_hamiltonian dominates), low-data ~1 h, phase_e ~1 h, phase_f ~1.5 h."""
+Wall-clock of the full run was NOT recorded; phase_d alone is ~83k CPU-seconds (see results/phase_d_pendulum.json)."""
 import subprocess, sys
 fast = "--fast" in sys.argv
 S = "2" if fast else "5"
