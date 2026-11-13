@@ -88,5 +88,5 @@ if __name__ == "__main__":
         true_traj=true_trajectory,
         pred_traj=pred_trajectory,
         save_path=save_path,
-        title="PINN Extrapolation (Trained on only 20% of data)"
+        title="PINN Extrapolation (trained on the first 2,000 of 10,000 steps)"
     )

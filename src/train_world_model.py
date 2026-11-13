@@ -65,7 +65,7 @@ if __name__ == "__main__":
         if epoch % 100 == 0:
             print(f"Epoch {epoch}/{epochs} | Total: {total_loss.item():.6f} | Data: {loss_data.item():.6f}")
 
-    print("Training complete. Performing infinite-horizon rollout (10,000 steps)...")
+    print("Training complete. Performing a free rollout to step 10,000 (25x the 400-step training window)...")
     
     
     model.eval()
@@ -81,5 +81,5 @@ if __name__ == "__main__":
         true_traj=true_data,
         pred_traj=pred_data,
         save_path='data/trajectories/world_model_success.png',
-        title="Physics-Informed World Model (Infinite Horizon Rollout)"
+        title="Physics-Informed World Model (rollout to step 10,000)"
     )

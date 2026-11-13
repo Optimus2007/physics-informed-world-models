@@ -7,14 +7,14 @@
 
 This repository has two parts.
 
-* **Part I, orbit prediction.** Physics informed world models for a two body orbit (report: [`report.pdf`](./report.pdf)).
+* **Part I, orbit prediction.** Physics informed world models for a two body orbit (report: [`report.pdf`](./report.pdf); read it with the corrections in [`docs/ERRATA_PART_I.md`](docs/ERRATA_PART_I.md)).
 * **Part II, control extension.** The same question asked for control: do physics structured world models help a model based agent learn a pendulum swing up with less data, and keep working when gravity, length or mass change? (report: [`report_control.pdf`](./report_control.pdf), code in `src/control/`).
 
 Part I is the original work described next.
 
-The project investigates the catastrophic failures of standard deep learning models when predicting continuous dynamical systems (specifically orbital mechanics) and implements a synthesized architecture utilizing **Latent Neural ODEs** constrained by physical priors to achieve stable long-horizon extrapolation.
+The project looks at how learned models fail when they are rolled out far beyond their training data on a continuous dynamical system (a two body orbit), and tests a **latent neural ODE** with an energy-variance penalty as a way to keep long rollouts on a physically sensible orbit.
 
-📄 **Part I paper:** [`report.pdf`](./report.pdf)  
+📄 **Part I paper:** [`report.pdf`](./report.pdf) (see [`docs/ERRATA_PART_I.md`](docs/ERRATA_PART_I.md): some statements in it do not match the code)  
 📄 **Part II paper (control extension):** [`report_control.pdf`](./report_control.pdf)
 
 ---
@@ -23,33 +23,55 @@ The project investigates the catastrophic failures of standard deep learning mod
 
 Predicting complex physical environments is a cornerstone of scientific computing and Model-Based Reinforcement Learning (MBRL). Traditional numerical solvers (like Runge-Kutta) are accurate but computationally expensive, driving the need for Machine Learning surrogates.
 
-However, pure neural networks lack thermodynamic priors, resulting in **compounding rollout errors**. Standard Physics-Informed Neural Networks (PINNs) mitigate this but suffer from **spectral bias** and phase drift over extended timelines due to a lack of strict causality.
+However, purely data-driven networks have no built-in physical priors such as energy conservation, so their **rollout errors compound**. Physics-Informed Neural Networks (PINNs) add physics to the loss, but as functions of time they can still drift over long horizons.
 
-**This project demonstrates:**
-1. **The Failure of Pure ML:** Standard autoregressive models fundamentally fail to conserve energy.
-2. **The Limits of PINNs:** Standard continuous-time PINNs lose phase alignment over long horizons.
-3. **The Success of PIWMs:** By compressing reality into a causal latent space and substituting discrete neural layers with an adaptive Neural ODE solver (dopri5), the model achieved a 25x extrapolation factor while maintaining significantly better energy conservation than baseline approaches.
+**What this part shows (one system, one run per model; see the re-run below):**
+1. **Autoregressive MLP:** a one-step MLP drifts once its own predictions are fed back in.
+2. **PINN:** a time-to-state PINN drifts over long horizons; in the seeded re-run it did not fit even its training window.
+3. **PIWM:** a latent neural ODE (dopri5) with an energy-variance penalty, trained on the first 400 steps, was rolled out to 10,000 steps (25× its training window). In the seeded re-run it stays within about 0.24 of the true orbit's path for the whole rollout, but its period is slightly off, so its position drifts from about step 580. Energy conservation was not measured numerically.
 ---
 
 ## 📊 Experimental Results
 
-All models were trained on only the first **20% (400 steps)** of a simulated 2-body orbital trajectory and forced to predict the remaining **80% (9,600 steps)** zero-shot.
+The trajectory is 10,000 RK4 steps (dt = 0.01). The three models do **not** see the same data in the current scripts:
+
+| Model | Training data (as in the code) |
+|---|---|
+| Naive MLP (`src/train_naive.py`) | one-step pairs from the **whole** trajectory (all 10,000 steps) |
+| PINN (`src/train_pinn.py`) | the first **2,000** steps |
+| PIWM (`src/train_world_model.py`) | the first **400** steps (4%); then rolled out to step 10,000 (25× the training window) |
+
+Each model is then rolled out freely from the initial state to step 10,000. Because the MLP sees the whole trajectory, it is not a like-for-like baseline.
 
 ### 1. The Ground Truth (RK4 Integrator)
 The target system is an elliptical 2-body orbit governed by Newtonian gravity, generated using a custom RK4 numerical solver.
 See [assets](assets) for the orbit plot and other generated figures.
 
 ### 2. Baseline 1: Naive Autoregressive MLP
-Trained purely on data, the naive model rapidly destabilizes during extrapolation. Lacking an energy-conservation prior, the compounding errors alter the implied momentum, causing a catastrophic unphysical spiral.
+Trained purely on data, the naive model's rollout compounds its own one-step errors. In the original (unseeded) run shown in `assets/` it spiralled away from the orbit; in the seeded re-run below it stayed close to the orbit's path but drifted in phase.
 See [assets](assets) for the baseline visualization.
 
 ### 3. Baseline 2: Standard Physics-Informed Neural Network (PINN)
-The PINN enforces gravitational constraints via Automatic Differentiation. While locally constrained by physics, the continuous mapping of time to space fails to close the periodic orbit over a 10,000-step horizon due to spectral bias.
+The PINN adds the gravitational equations to its loss via automatic differentiation. As a direct map from time to position it did not close the periodic orbit over the 10,000-step horizon in the original run; spectral bias is a likely cause, but it was not tested separately.
 See [assets](assets) for the PINN visualization.
 
 ### 4. Physics-Informed World Model (PIWM)
-The Latent Neural ODE World Model demonstrates substantially improved long-horizon stability compared to the baselines. By combining adaptive ODE integration with a Hamiltonian energy-variance loss, the trajectory remains tightly mathematically bounded to the ground-truth simulation without drift or spectral amnesia.
+The latent neural ODE world model combines adaptive ODE integration with an energy-variance penalty (weight 0.1, a soft penalty, not a hard constraint). Its rollout stays on a bounded, closed orbit close to the true one, but its orbital period is slightly off, so its position drifts away from the ground truth over time (see the re-run below).
 See [assets](assets) for the world model visualization.
+
+---
+
+### 5. Seeded re-run (figures used on the portfolio)
+
+`analysis/make_site_figures.py` re-runs the three Part I training scripts exactly as written, with seed 0 and 2 CPU threads (about 80 s on an M2), and writes `results/site_figures.json` and `figures/site_orbit_error.png`. It reports two errors along the rollout: position error, and distance from the true orbit's path (is the model on the right orbit, whatever its timing).
+
+| Model | Position error first above 0.5 | Max distance from the true orbit's path |
+|---|---|---|
+| PIWM (trained on steps 0-400) | step 580 | 0.24 (bounded for all 10,000 steps) |
+| Naive MLP (trained on all 10,000 steps) | step 1,380 | 0.017 |
+| PINN (trained on steps 0-2,000) | step 0 (did not fit) | 1.03 |
+
+So in this run the PIWM keeps a stable orbit for 25× its training window but does not track the position, and the MLP, which saw far more data, stays closer to the true path. One seed per model; results from other seeds may differ. The same script also redraws the Part II learning curves from `results/phase_d_pendulum.json` (`figures/site_learning_curves.png`).
 
 ---
 

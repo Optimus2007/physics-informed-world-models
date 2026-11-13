@@ -69,7 +69,7 @@ if __name__ == "__main__":
     print("Training complete. Beginning Autoregressive Rollout...")
     
     # The Autoregressive Rollout (Testing Phase)
-    # We give the AI ONLY the very first state. It must predict all 2000 future steps itself.
+    # We give the model ONLY the very first state. It must predict every later step itself (10,000 steps in total).
     num_steps = len(true_trajectory)
     predicted_trajectory = torch.zeros((num_steps, 4))
     predicted_trajectory[0] = torch.tensor(true_trajectory[0], dtype=torch.float32)
